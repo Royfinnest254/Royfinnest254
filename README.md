@@ -11,24 +11,22 @@
 
 ## 🖥️ System Diagnostics Console
 
-<table width="100%" border="0" cellpadding="2" cellspacing="2">
-  <tr>
-    <td width="50%" align="center">
-      <img src="https://github-readme-stats.vercel.app/api?username=Royfinnest254&show_icons=true&theme=dark&bg_color=000000&text_color=ffffff&icon_color=00ff00&border_color=333333" alt="GitHub Stats" />
-    </td>
-    <td width="50%" align="center">
-      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Royfinnest254&layout=compact&theme=dark&bg_color=000000&text_color=ffffff&icon_color=00ff00&border_color=333333" alt="Top Languages" />
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" align="center">
-      <img src="https://github-readme-streak-stats.herokuapp.com/?user=Royfinnest254&theme=dark&background=000000&text=ffffff&ring=00ff00&fire=00ff00&border=333333" alt="Contribution Streak" />
-    </td>
-    <td width="50%" align="center">
-      <img src="https://github-readme-activity-graph.vercel.app/g?username=Royfinnest254&theme=dark&bg_color=000000&color=00ff00&line=00ff00&point=ffffff&area=true&hide_border=false" alt="Activity Graph" />
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=Royfinnest254&show_icons=true&theme=dark" alt="GitHub Stats" width="48%" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Royfinnest254&layout=compact&theme=dark" alt="Top Languages" width="48%" />
+</p>
+
+<p align="center">
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=Royfinnest254&theme=dark" alt="Contribution Streak" width="97%" />
+</p>
+
+---
+
+## 🏆 System Credentials & Achievements
+
+<p align="center">
+  <img src="https://github-profile-trophy.vercel.app/?username=Royfinnest254&theme=onedark&column=3&margin-w=15&no-bg=true" alt="GitHub Trophies" width="97%" />
+</p>
 
 ---
 
