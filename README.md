@@ -7,6 +7,15 @@
   </a>
 </p>
 
+```text
+-----BEGIN CERTIFIED CRYPTOGRAPHIC IDENTIFIER-----
+Node ID: Royfinnest254
+Role: Lead Architect & Protocol Founder
+Signature Engine: Ed25519 (RFC 8032)
+Fingerprint: 7A8B9C2D1E0F3A4B5C6D7E8F9A0B1C2D3E4F5A6B
+-----END CERTIFIED CRYPTOGRAPHIC IDENTIFIER-----
+```
+
 ---
 
 ## 🖥️ System Diagnostics Console
@@ -18,14 +27,6 @@
 
 <p align="center">
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=Royfinnest254&theme=dark" alt="Contribution Streak" width="97%" />
-</p>
-
----
-
-## 🏆 System Credentials & Achievements
-
-<p align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=Royfinnest254&theme=onedark&column=3&margin-w=15&no-bg=true" alt="GitHub Trophies" width="97%" />
 </p>
 
 ---
