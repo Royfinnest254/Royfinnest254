@@ -1,19 +1,30 @@
 # Roy Chumba
 **Systems Architect | Distributed Cryptographic Protocols**
 
-```text
-CONNEX CORE REFERENCE NODE [STATUS: ONLINE]
---------------------------------------------------
-Identifier: Royfinnest254
-Role: Lead Architect & Protocol Founder
-Jurisdiction: Kenya (Nairobi / Elgeyo Marakwet)
-Active Systems: Go Gateway, 2-of-3 Ed25519 Witnesses, Append-Only SQLite
---------------------------------------------------
-```
+<p align="left">
+  <a href="https://git.io/typing-svg">
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&pause=1000&color=00FF00&background=00000000&width=500&lines=CONNEX+Node+Status%3A+ONLINE;Enforcing+append-only+SQL+immutability...;Executing+2-of-3+Ed25519+Quorum...;Verifying+transaction+integrity...;Zero+cloud+dependencies.+Pure+math." alt="Typing SVG" />
+  </a>
+</p>
 
 ---
 
-## The CONNEX Protocol Topology
+## Live System Diagnostics
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://github-readme-stats.vercel.app/api?username=Royfinnest254&show_icons=true&theme=dark&bg_color=000000&text_color=ffffff&icon_color=00ff00&border_color=333333" alt="GitHub Stats" />
+    </td>
+    <td width="50%" align="center">
+      <img src="https://github-readme-streak-stats.herokuapp.com/?user=Royfinnest254&theme=dark&background=000000&text=ffffff&ring=00ff00&fire=00ff00&border=333333" alt="Contribution Streak" />
+    </td>
+  </tr>
+</table>
+
+---
+
+## CONNEX Protocol Topology
 
 A process-isolated payment coordination layer translating legacy ISO 8583 message streams into validated, signed, and immutable ISO 20022 XML proof bundles.
 
@@ -36,8 +47,6 @@ graph TD
 ---
 
 ## Transaction & Offline Audit Sequence
-
-How a single transaction is processed, signed by parallel witnesses, and verified out-of-band using standard, standalone python runtimes.
 
 ```mermaid
 sequenceDiagram
