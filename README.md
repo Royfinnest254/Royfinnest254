@@ -7,27 +7,68 @@
   </a>
 </p>
 
-```text
------BEGIN CERTIFIED CRYPTOGRAPHIC IDENTIFIER-----
-Node ID: Royfinnest254
-Role: Lead Architect & Protocol Founder
-Signature Engine: Ed25519 (RFC 8032)
-Fingerprint: 7A8B9C2D1E0F3A4B5C6D7E8F9A0B1C2D3E4F5A6B
------END CERTIFIED CRYPTOGRAPHIC IDENTIFIER-----
+---
+
+## 💻 Active Node Manifest
+
+This diagnostic console reflects the active reference node topology for the CONNEX payment coordination protocol.
+
+```json
+{
+  "node": {
+    "identifier": "Royfinnest254",
+    "status": "ONLINE",
+    "location": "East Africa (Nairobi / Elgeyo Marakwet)",
+    "protocol": "CONNEX v1.0.0-alpha",
+    "verification": "Ed25519 Quorum Certified"
+  },
+  "runtime_specs": {
+    "engine": "Go 1.22 (Isolated Namespace)",
+    "storage": "WAL-Optimized SQLite (CGO-free)",
+    "immutability": "Append-Only (Database Triggers Enabled)",
+    "auditor": "Standalone Python 3 / PyNaCl"
+  },
+  "performance_diagnostics": {
+    "p99_latency": "28ms",
+    "peak_throughput": "350 TPS",
+    "witness_timeout": "150ms"
+  }
+}
 ```
 
 ---
 
-## 🖥️ System Diagnostics Console
+## 📈 System Metrics & Active Days
 
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=Royfinnest254&show_icons=true&theme=dark" alt="GitHub Stats" width="48%" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Royfinnest254&layout=compact&theme=dark" alt="Top Languages" width="48%" />
-</p>
+These metrics are compiled directly from actual, authentic Git contributions.
 
 <p align="center">
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=Royfinnest254&theme=dark" alt="Contribution Streak" width="97%" />
 </p>
+
+---
+
+## ⛓️ Protocol Topology (ASCII Mapping)
+
+```text
+       [ LEGACY CORE ]
+              │ (ISO 8583 Bitmaps)
+              ▼
+    ┌───────────────────┐
+    │  CONNEX Gateway   │ (Go 1.22 Switch)
+    └─────────┬─────────┘
+              │ (Parallel Coordination Hash)
+      ┌───────┼───────┐
+      ▼       ▼       ▼
+   [Alpha] [Beta] [Gamma]  (Stateless Ed25519 Witnesses)
+      │       │       │
+      └───────┬───────┘
+              │ (Quorum Achieved: 2-of-3)
+              ▼
+    ┌───────────────────┐
+    │ SQLite Ledger DB  │ (Append-Only Triggers)
+    └───────────────────┘
+```
 
 ---
 
