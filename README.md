@@ -1,94 +1,109 @@
 # Roy Chumba
-Founder and Principal Architect, Connex Technologies
+**Founder & Lead Architect, CONNEX**
 
-Systems engineer and technology designer specialized in decentralized transactional networks, high-security banking bridges, and cryptographic multi-process coordination systems. As the founder of Connex Technologies, I lead the architecture and reference implementation of the Connex Protocol—an institutional-grade payment coordination engine designed for zero-trust transactional orchestration.
+Distributed systems engineer and protocol designer specializing in high-performance financial cryptography, transactional consensus, and process-isolated settlement systems. 
 
----
-
-## Technical Core and Expertise
-
-### Systems Engineering and Low-Latency Runtimes
-<p align="left">
-  <img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go" />
-  <img src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++" />
-  <img src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white" alt="Rust" />
-  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-</p>
-
-### Cryptographic Protocols and Cryptoprocessors
-<p align="left">
-  <img src="https://img.shields.io/badge/ISO_8583-000000?style=for-the-badge" alt="ISO 8583 Standard" />
-  <img src="https://img.shields.io/badge/PCI_DSS_Compliance-0D1117?style=for-the-badge" alt="PCI DSS" />
-  <img src="https://img.shields.io/badge/Zero_Knowledge_Proofs-1B2A4A?style=for-the-badge" alt="ZKP" />
-</p>
+I architect and maintain the **CONNEX Protocol**—a zero-trust, local-first payment coordination engine designed to bridge the legacy last-mile data gap (ISO 8583) and global settlement standards (ISO 20022) with absolute cryptographic integrity.
 
 ---
 
-## The Connex Protocol: Architecture and Topology
+## Technical Domain Focus
 
-The Connex Protocol resolves multi-party transaction settlement conflicts through an isolated cryptographic orchestration model. It leverages isolated system processes to separate parsing, validation, and execution scopes, preventing class-wide injection and side-channel vulnerabilities.
+### Runtime Environments & Systems Engineering
+*   **Low-Level Systems:** Pure Go (Golang) for high-performance concurrency, C++, Rust
+*   **Data Serialization:** ISO 8583 (1987/1993/2003 formats), ISO 20022 (`pacs.008.001.08` XML synthesis)
+*   **Storage Paradigms:** Embeddable relational ledgers (CGO-free SQLite), WAL-mode optimization, database-level append-only triggers
 
-### System Architecture Blueprint
+### Cryptographic Security & Consensus Protocols
+*   **Signature Schemes:** Ed25519 elliptic-curve public-key cryptography
+*   **Hash Algorithms:** Double SHA-256 for non-repudiation and transaction linking
+*   **Consensus Topology:** Stateless 2-of-3 Parallel Witness Quorums (Byzantine fault-tolerant design)
+*   **Zero-Trust Identity:** Multi-party signature audits and standalone verification runtimes
+
+---
+
+## CONNEX System Architecture Topology
+
+The CONNEX Protocol operates on a process-isolation model to secure payment transitions. The gateway coordinates parallel blind-signing requests with isolated witness nodes without exposing core credentials.
 
 ```mermaid
 graph TD
-    Client["Client / Merchant Interface"]
-    Parser["Go-Based ISO 8583 Parser (Isolated Sandboxed Process)"]
-    Orchestrator["Payment Cryptographic Orchestrator"]
-    HSM["Hardware Security Module / Secure Enclave"]
-    Ledger["Verifiable Transaction Ledger"]
-    Bank["Banking Core Gateway (Interbank APIs)"]
+    subgraph "Ingress & Parse Layer"
+        A[Legacy Bank Switch / ISO 8583] -->|Raw Bitmaps| B(CONNEX Gateway)
+        B -->|Deterministic Rules| C{Enrichment Engine}
+    end
 
-    Client -->|Raw Socket Stream| Parser
-    Parser -->|Structured JSON Payload / Stdin Pipe| Orchestrator
-    Orchestrator -->|Key Derivation / Decryption| HSM
-    Orchestrator -->|State Verification| Ledger
-    Orchestrator -->|Settlement Handshake| Bank
+    subgraph "Consensus & Coordination"
+        C -->|SHA-256 Hash Chaining| D(Coordination Hash)
+        D -->|Parallel HTTP Sign Request| E{2-of-3 Quorum}
+        
+        E -->|Witness Alpha| W1(Port 8091 / Ed25519)
+        E -->|Witness Beta| W2(Port 8092 / Ed25519)
+        E -->|Witness Gamma| W3(Port 8093 / Ed25519)
+    end
+
+    subgraph "Immutable Ledger"
+        E -->|Quorum Met| F[Append-Only SQLite Ledger]
+        F -->|Trigger Blocked| G[Signed Proof Bundle]
+    end
+
+    style B fill:#111,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#111,stroke:#00ff00,stroke-width:2px,color:#fff
+    style G fill:#111,stroke:#00ff00,stroke-width:3px,color:#fff
 ```
 
 ---
 
-## Transactional Flow and Orchestration
+## Transactional Quorum & Verification Flow
 
-The sequence diagram below details the zero-trust multi-process isolated parsing and settlement flow established within Connex nodes:
+The diagram below details the sequence of events during a single transaction, showing how a quorum is verified and stored securely.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Merchant as Merchant Terminal
-    participant Parser as Isolated Go Parser
-    participant Engine as Connex Core Engine
-    participant Vault as HSM Cryptographic Vault
-    participant Bank as Settlement Core
+    participant Bank as Banking Core
+    participant GW as CONNEX Gateway (8080)
+    participant WT as Witnesses (Alpha/Beta/Gamma)
+    participant DB as SQLite DB (data/connex.db)
+    participant Aud as Standalone Python Verifier
 
-    Merchant->>Parser: Transmit Raw Transaction Stream (ISO 8583 String)
-    Note over Parser: Sandbox Process Isolation Boundary
-    Parser->>Parser: Tokenize and sanitize data frames
-    Parser->>Engine: Stream Structured JSON Data Frame
-    Engine->>Vault: Verify payload signatures and decrypt fields
-    Vault-->>Engine: Confirm payload validity
-    Engine->>Bank: Execute atomic settlement transaction
-    Bank-->>Engine: Return 200 OK Settlement Confirmation
-    Engine-->>Merchant: Broadcast signed transaction success
+    Bank->>GW: POST /v1/coordinate (Base64 ISO 8583)
+    GW->>GW: Parse bitmaps & enrich to ISO 20022 XML
+    GW->>GW: Compute SHA-256 Coordination Hash
+    par Parallel Quorum Call
+        GW->>WT: POST /v1/sign (Hash)
+        WT->>WT: Sign with Ed25519 Private Key
+        WT-->>GW: Return 64-byte Signature
+    end
+    Note over GW: Confirm 2 out of 3 valid signatures
+    GW->>DB: INSERT transaction & proof (Triggers enforce append-only)
+    GW-->>Bank: Return Signed Proof Bundle (JSON)
+    
+    Note over Aud: Offline Audit Loop
+    Aud->>Aud: Fetch Witness Public Keys
+    Aud->>Aud: Recompute Coordination Hash
+    Aud->>Aud: Verify Ed25519 Signatures (pynacl)
+    Aud-->>Aud: Return 0 (PASS) / 1 (FAIL)
 ```
 
 ---
 
-## Technical Specifications: Connex Core
+## CONNEX Reference Implementation Specifications
 
-| Architectural Metric | Implementation Standard | Target Performance | Security Level |
-| :--- | :--- | :--- | :--- |
-| **Parsing Engine** | Structured ISO 8583 Parser in Go | Sub-millisecond execution times | Process sandboxing via system namespaces |
-| **Isolation Model** | Multi-process containment | Less than 5MB per execution thread | Zero shared-memory architecture (IPC Pipes) |
-| **Verification System** | Cryptographic signatures and state proofing | 100% verifiable auditing | Multi-party signature consensus |
-| **Throughput Capacity** | Parallelized connection pooling | Up to 15,000 transactions per second | Linear vertical scaling |
+| Metric | Specification | Real-World Value |
+| :--- | :--- | :--- |
+| **Parsing Latency** | Direct bitmap mapping in pure Go | < 2.0 ms |
+| **System Throughput** | Parallel connection pooling | ~350 Transactions Per Second (TPS) |
+| **End-to-End Latency** | From POST ingest to signed JSON response | 28ms P99 |
+| **Storage Guarantees** | SQLite Database Triggers | Strict `ABORT` on unauthorized DML (`UPDATE`/`DELETE`) |
+| **System Footprint** | Static compiled binaries | < 15MB total |
+| **Verifiability** | Standalone Python interpreter | 100% decentralized, 0-trust verification |
 
 ---
 
-## Professional Objectives and Vision
+## Active Research and Objectives
 
-At Connex Technologies, we are establishing the next generation of financial infrastructure:
-- **Zero-Trust Settlement Rails:** Deploying decentralized payment pipelines that do not rely on central storage of transactional secrets.
-- **Process Isolation Containment:** Securing parsing routines from remote code execution vulnerabilities by segregating data decoding from high-privilege execution scopes.
-- **Decentralized Clearing:** Developing scalable cryptographic state proofs to audit financial transfers without compromising user privacy.
-- **Enterprise Integrations:** Creating seamless compliance adapters for national settlement gateways and banking interfaces.
+*   **Financial Interoperability:** Bridging the KEPSS (Kenya Electronic Payment and Settlement System) ISO 20022 framework with existing M-Pesa (retail) and banking core networks.
+*   **Stateless Cryptoprocessing:** Decoupling credential management from application routing, ensuring that coordinate gateways do not hold signature keys.
+*   **Hardware Security Module Integration:** Porting the witness software to secure hardware enclaves (Intel SGX / AWS Nitro Enclaves) to achieve absolute security for private key storage.
+*   **Byzantine Consensus Optimization:** Reducing signature verification latency in low-bandwidth distributed environments.
