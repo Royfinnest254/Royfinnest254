@@ -1,109 +1,84 @@
 # Roy Chumba
-**Founder & Lead Architect, CONNEX**
+**Systems Architect | Distributed Cryptographic Protocols**
 
-Distributed systems engineer and protocol designer specializing in high-performance financial cryptography, transactional consensus, and process-isolated settlement systems. 
-
-I architect and maintain the **CONNEX Protocol**—a zero-trust, local-first payment coordination engine designed to bridge the legacy last-mile data gap (ISO 8583) and global settlement standards (ISO 20022) with absolute cryptographic integrity.
-
----
-
-## Technical Domain Focus
-
-### Runtime Environments & Systems Engineering
-*   **Low-Level Systems:** Pure Go (Golang) for high-performance concurrency, C++, Rust
-*   **Data Serialization:** ISO 8583 (1987/1993/2003 formats), ISO 20022 (`pacs.008.001.08` XML synthesis)
-*   **Storage Paradigms:** Embeddable relational ledgers (CGO-free SQLite), WAL-mode optimization, database-level append-only triggers
-
-### Cryptographic Security & Consensus Protocols
-*   **Signature Schemes:** Ed25519 elliptic-curve public-key cryptography
-*   **Hash Algorithms:** Double SHA-256 for non-repudiation and transaction linking
-*   **Consensus Topology:** Stateless 2-of-3 Parallel Witness Quorums (Byzantine fault-tolerant design)
-*   **Zero-Trust Identity:** Multi-party signature audits and standalone verification runtimes
-
----
-
-## CONNEX System Architecture Topology
-
-The CONNEX Protocol operates on a process-isolation model to secure payment transitions. The gateway coordinates parallel blind-signing requests with isolated witness nodes without exposing core credentials.
-
-```mermaid
-graph TD
-    subgraph "Ingress & Parse Layer"
-        A[Legacy Bank Switch / ISO 8583] -->|Raw Bitmaps| B(CONNEX Gateway)
-        B -->|Deterministic Rules| C{Enrichment Engine}
-    end
-
-    subgraph "Consensus & Coordination"
-        C -->|SHA-256 Hash Chaining| D(Coordination Hash)
-        D -->|Parallel HTTP Sign Request| E{2-of-3 Quorum}
-        
-        E -->|Witness Alpha| W1(Port 8091 / Ed25519)
-        E -->|Witness Beta| W2(Port 8092 / Ed25519)
-        E -->|Witness Gamma| W3(Port 8093 / Ed25519)
-    end
-
-    subgraph "Immutable Ledger"
-        E -->|Quorum Met| F[Append-Only SQLite Ledger]
-        F -->|Trigger Blocked| G[Signed Proof Bundle]
-    end
-
-    style B fill:#111,stroke:#fff,stroke-width:2px,color:#fff
-    style F fill:#111,stroke:#00ff00,stroke-width:2px,color:#fff
-    style G fill:#111,stroke:#00ff00,stroke-width:3px,color:#fff
+```text
+CONNEX CORE REFERENCE NODE [STATUS: ONLINE]
+--------------------------------------------------
+Identifier: Royfinnest254
+Role: Lead Architect & Protocol Founder
+Jurisdiction: Kenya (Nairobi / Elgeyo Marakwet)
+Active Systems: Go Gateway, 2-of-3 Ed25519 Witnesses, Append-Only SQLite
+--------------------------------------------------
 ```
 
 ---
 
-## Transactional Quorum & Verification Flow
+## The CONNEX Protocol Topology
 
-The diagram below details the sequence of events during a single transaction, showing how a quorum is verified and stored securely.
+A process-isolated payment coordination layer translating legacy ISO 8583 message streams into validated, signed, and immutable ISO 20022 XML proof bundles.
+
+```mermaid
+graph TD
+    A[ISO 8583 Legacy Stream] --> B(Go Gateway)
+    B --> C{Enrichment Engine}
+    C -->|SHA-256 Chaining| D(Coordination Hash)
+    D --> E{2-of-3 Quorum}
+    E -->|Alpha / 8091| W1[Ed25519 Sign]
+    E -->|Beta / 8092| W2[Ed25519 Sign]
+    E -->|Gamma / 8093| W3[Ed25519 Sign]
+    E -->|Quorum Met| F[(Append-Only DB)]
+    F --> G[Verifiable Proof Bundle]
+    style B fill:#000,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#000,stroke:#00ff00,stroke-width:2px,color:#fff
+    style G fill:#000,stroke:#00ff00,stroke-width:3px,color:#fff
+```
+
+---
+
+## Transaction & Offline Audit Sequence
+
+How a single transaction is processed, signed by parallel witnesses, and verified out-of-band using standard, standalone python runtimes.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Bank as Banking Core
-    participant GW as CONNEX Gateway (8080)
+    participant Bank as Core Bank
+    participant GW as Go Gateway
     participant WT as Witnesses (Alpha/Beta/Gamma)
-    participant DB as SQLite DB (data/connex.db)
-    participant Aud as Standalone Python Verifier
+    participant DB as SQLite Ledger
+    participant Aud as Standalone Auditor (Python)
 
-    Bank->>GW: POST /v1/coordinate (Base64 ISO 8583)
-    GW->>GW: Parse bitmaps & enrich to ISO 20022 XML
-    GW->>GW: Compute SHA-256 Coordination Hash
+    Bank->>GW: POST ISO 8583
+    GW->>GW: Parse Bitmaps & Enrich to ISO 20022
+    GW->>GW: Compute Double SHA-256
     par Parallel Quorum Call
-        GW->>WT: POST /v1/sign (Hash)
-        WT->>WT: Sign with Ed25519 Private Key
-        WT-->>GW: Return 64-byte Signature
+        GW->>WT: Request Signature (Hash)
+        WT-->>GW: Return Ed25519 Signatures
     end
-    Note over GW: Confirm 2 out of 3 valid signatures
-    GW->>DB: INSERT transaction & proof (Triggers enforce append-only)
-    GW-->>Bank: Return Signed Proof Bundle (JSON)
+    GW->>DB: Append to Ledger (DB Triggers Block Updates/Deletes)
+    GW-->>Bank: Return Signed Proof Bundle
     
-    Note over Aud: Offline Audit Loop
-    Aud->>Aud: Fetch Witness Public Keys
-    Aud->>Aud: Recompute Coordination Hash
-    Aud->>Aud: Verify Ed25519 Signatures (pynacl)
+    Note over Aud: 0-Trust Offline Loop
+    Aud->>Aud: Recompute Hash & Verify signatures (pynacl)
     Aud-->>Aud: Return 0 (PASS) / 1 (FAIL)
 ```
 
 ---
 
-## CONNEX Reference Implementation Specifications
+## Diagnostic Specifications
 
-| Metric | Specification | Real-World Value |
-| :--- | :--- | :--- |
-| **Parsing Latency** | Direct bitmap mapping in pure Go | < 2.0 ms |
-| **System Throughput** | Parallel connection pooling | ~350 Transactions Per Second (TPS) |
-| **End-to-End Latency** | From POST ingest to signed JSON response | 28ms P99 |
-| **Storage Guarantees** | SQLite Database Triggers | Strict `ABORT` on unauthorized DML (`UPDATE`/`DELETE`) |
-| **System Footprint** | Static compiled binaries | < 15MB total |
-| **Verifiability** | Standalone Python interpreter | 100% decentralized, 0-trust verification |
+```text
++-----------------------+----------------------------------------------------+
+| Metric                | Implementation Standard                            |
++-----------------------+----------------------------------------------------+
+| Engine Runtime        | Go 1.22 (Parallel Concurrency)                     |
+| Throughput            | ~350 Transactions Per Second (TPS)                 |
+| Latency               | 28ms P99 (Zero Cloud Jitter)                       |
+| Verification          | Stateless Ed25519 Multi-Signatures                 |
+| Ledger Immutability   | SQLite Database Triggers (Strict UPDATE/DELETE ban)|
+| Footprint             | < 15MB Static Binaries                             |
++-----------------------+----------------------------------------------------+
+```
 
 ---
-
-## Active Research and Objectives
-
-*   **Financial Interoperability:** Bridging the KEPSS (Kenya Electronic Payment and Settlement System) ISO 20022 framework with existing M-Pesa (retail) and banking core networks.
-*   **Stateless Cryptoprocessing:** Decoupling credential management from application routing, ensuring that coordinate gateways do not hold signature keys.
-*   **Hardware Security Module Integration:** Porting the witness software to secure hardware enclaves (Intel SGX / AWS Nitro Enclaves) to achieve absolute security for private key storage.
-*   **Byzantine Consensus Optimization:** Reducing signature verification latency in low-bandwidth distributed environments.
+*Zero cloud dependencies. Zero trusted third parties. Hardened cryptographic proof.*
